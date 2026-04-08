@@ -30,7 +30,7 @@ except Exception as e:
 # balance += PAYMENT_PER_PERIOD
 # print(f"balance: N{balance: ,.2f}")
 try:
-    YEARS = float(input("Enter number of years in future: "))
+    YEARS = int(input("Enter number of years in future: "))
 except Exception as e:
     print(e)
 
@@ -63,11 +63,32 @@ def total_periods(yearly_compounding_period, duration): # duration in years
 def future_account_annuity(payment_per_period, factor):
     return payment_per_period * factor
 
+
+# Annuity Due (Payment made at the begining of each period)
+def future_value_due(rate_per_period, periods, payment_per_period):
+    r = rate_per_period / 100 # convert % to decimal
+    account = 0
+    factor = 0
+    periodic_payments = []
+    for period in range(periods):
+        factor = ((((1 + r) ** (period)) - 1) / r) * (1 + r)
+        account = (payment_per_period * factor) + payment_per_period
+        periodic_payments.append(account)
+        factor = 0
+        account = 0
+    return periodic_payments
+
+
+
+
 periodic_rate = rate_per_period(ANNUAL_INTEREST_RATE, COMPOUNDING_PERIOD)
 periods = total_periods(COMPOUNDING_PERIOD, YEARS)
 factor = future_value_factor(periodic_rate, periods)
 future_account_total = future_account_annuity(PAYMENT_PER_PERIOD, factor)
 interest = future_account_total - (PAYMENT_PER_PERIOD * periods)
+
+fvd = future_value_due(periodic_rate, periods, PAYMENT_PER_PERIOD) # Future value due factor
+
 print()
 print("__________________________________________")
 print(f"Rate per period: {periodic_rate: .2f}% {compounding_freq[COMPOUNDING_PERIOD]}")
@@ -77,5 +98,10 @@ print(f"Future Value: N{future_account_total:,.2f}")
 print(f"Interest gained: N{interest:,.2f}")
 print("__________________________________________")
 print()
+print(f"Payment made at the begining of each period: ")
+# print(f"{fvd}")
+
+for n in range(len(fvd)):
+        print(f"Future value for period {n + 1}: N{fvd[n]:,.2f}")
 
 
