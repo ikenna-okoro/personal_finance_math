@@ -67,15 +67,13 @@ def future_account_annuity(payment_per_period, factor):
 # Annuity Due (Payment made at the begining of each period)
 def future_value_due(rate_per_period, periods, payment_per_period):
     r = rate_per_period / 100 # convert % to decimal
-    account = 0
     factor = 0
     periodic_payments = []
     for period in range(periods):
         factor = ((((1 + r) ** (period)) - 1) / r) * (1 + r)
         account = (payment_per_period * factor) + payment_per_period
-        periodic_payments.append(account)
+        periodic_payments.append((payment_per_period * factor) + payment_per_period)
         factor = 0
-        account = 0
     return periodic_payments
 
 
